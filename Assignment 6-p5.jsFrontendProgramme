@@ -1,4 +1,4 @@
-// p5.js Frontend - AA Bar Queue Widget + Main UI with Pressure Sensor
+// p5.js Frontend - AA Bar Queue Widget 
 // Connects to WebSocket for real-time queue updates from ESP32 with Pressure Sensor
 
 let socket;
