@@ -1,4 +1,4 @@
-// Node.js Backend - Queue System with Pressure Sensor
+// Node.js Backend - Queue System 
 // Handles queue updates from ESP32 and sends data to p5.js via WebSockets
 
 const express = require("express");
