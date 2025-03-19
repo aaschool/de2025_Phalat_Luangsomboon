@@ -18,8 +18,11 @@ AA Bar Que
 ## Required Components
 ### **Hardware Components**
   **ESP32 – Microcontroller for handling sensor input and WiFi communication.
+
   **FSR402 - Detect varying pressure
+  
   **Power Source** – ESP32 requires 5V power supply.
+  
   **WiFi Network** – Required for ESP32 to send data to the backend.  
 
 ### **Software Requirements**
