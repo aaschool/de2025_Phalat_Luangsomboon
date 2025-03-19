@@ -1,4 +1,4 @@
-// p5.js Frontend - AA Bar Queue Widget 
+// p5.js Frontend - AA Bar Queue App
 
 let socket;
 let queueCount = 0;
@@ -8,9 +8,6 @@ function setup() {
     socket = io(192.168.1.1); // Update with your server IP
     socket.on("current_queue", (count) => {
         queueCount = count;
-        if (soundEnabled) playSound();
-        if (vibrationEnabled) navigator.vibrate(200);
-        if (notificationsEnabled) sendNotification();
     });
 
     createUI();
