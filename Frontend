@@ -34,21 +34,11 @@ function draw() {
 }
 
 function createUI() {
-    let soundToggle = createCheckbox("Enable Sound Alerts", true);
-    soundToggle.position(120, 200);
-    soundToggle.changed(() => soundEnabled = soundToggle.checked());
-
-    let vibrationToggle = createCheckbox("Enable Vibration Alerts", true);
-    vibrationToggle.position(120, 250);
-    vibrationToggle.changed(() => vibrationEnabled = vibrationToggle.checked());
 
     let notificationsToggle = createCheckbox("Enable Notifications", true);
     notificationsToggle.position(120, 300);
     notificationsToggle.changed(() => notificationsEnabled = notificationsToggle.checked());
 
-    let addWidgetBtn = createButton("Add Widget to Home Screen");
-    addWidgetBtn.position(110, 350);
-    addWidgetBtn.mousePressed(() => alert("Widget added to home screen!"));
 }
 
 function playSound() {
