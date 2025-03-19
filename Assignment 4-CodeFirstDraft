@@ -1,0 +1,63 @@
+#include <WiFi.h>         // Use <ESP8266WiFi.h> for ESP8266
+#include <HTTPClient.h>   // To send HTTP requests
+
+// Wi-Fi Credentials
+const char* ssid = "YOUR_WIFI_SSID";
+const char* password = "YOUR_WIFI_PASSWORD";
+
+// Server to send data (Change this to your server or mobile app API)
+const char* serverUrl = "http://192.168.1.100:3000/update-count"; // Local Server IP
+
+// Pressure Sensor Variables
+int queueCount = 0;
+#define PRESSURE_SENSOR_PIN 34  // Define the GPIO pin connected to the pressure sensor
+
+void setup() {
+    Serial.begin(115200);  // Start Serial Monitor
+    WiFi.begin(ssid, password);
+    
+    // Wait for connection
+    Serial.print("Connecting to WiFi...");
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
+    }
+    Serial.println("\nConnected to WiFi");
+}
+
+void loop() {
+    // Read Pressure Sensor Data (Assuming digital signal output)
+    int sensorValue = digitalRead(PRESSURE_SENSOR_PIN);
+    
+    // Logic: If pressure is detected, increment the queue count
+    if (sensorValue == HIGH) {
+        queueCount++;  // Increment count if sensor detects pressure
+        sendQueueCount(queueCount);
+    }
+
+    delay(5000);  // Send data every 5 seconds
+}
+
+// Function to send queue count to the phone app/server
+void sendQueueCount(int count) {
+    if (WiFi.status() == WL_CONNECTED) {
+        HTTPClient http;
+        http.begin(serverUrl);
+        http.addHeader("Content-Type", "application/json");
+
+        // JSON Payload
+        String payload = "{\"count\":" + String(count) + "}";
+        int httpResponseCode = http.POST(payload);
+
+        if (httpResponseCode > 0) {
+            Serial.println("Data sent successfully: " + String(httpResponseCode));
+        } else {
+            Serial.println("Error sending data: " + String(httpResponseCode));
+        }
+
+        http.end(); // Close connection
+    } else {
+        Serial.println("WiFi Disconnected. Reconnecting...");
+        WiFi.begin(ssid, password);
+    }
+}
