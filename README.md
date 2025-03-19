@@ -1,4 +1,4 @@
-Print Center Queue Counter (AI-Based People Counting)
+AA Bar que counter
 
 Project Structure
 ```
