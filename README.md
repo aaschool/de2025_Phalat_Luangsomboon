@@ -1,10 +1,10 @@
-# Print Center Queue Counter (AI-Based People Counting)
+Print Center Queue Counter (AI-Based People Counting)
 
-## Project Overview
+Project Overview
 This project provides a real time counter for the Architectural Association Bar, using an Pressure sensor to detect the number of people in the queue.
 ---
 
-## Project Structure
+Project Structure
 ```
 AA Bar Que
    frontend/       # p5.js frontend
@@ -15,8 +15,8 @@ AA Bar Que
 
 ---
 
-## Required Components
-### **Hardware Components**
+ Required Components
+ **Hardware Components**
   **ESP32 – Microcontroller for handling sensor input and WiFi communication.
 
   **FSR402 - Detect varying pressure
