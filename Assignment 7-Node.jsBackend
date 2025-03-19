@@ -1,0 +1,71 @@
+// Node.js Backend - Queue System with Pressure Sensor
+// Handles queue updates from ESP32 and sends data to p5.js via WebSockets
+
+const express = require("express");
+const http = require("http");
+const socketIo = require("socket.io");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const { MongoClient } = require("mongodb"); // Optional: Store queue data
+
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
+
+app.use(cors());
+app.use(bodyParser.json());
+
+let queueCount = 0;  // Stores the latest queue count
+
+// Optional: Setup MongoDB for storing queue history
+const mongoUrl = "mongodb://localhost:27017";
+const dbName = "queueDB";
+let db;
+MongoClient.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(client => {
+        db = client.db(dbName);
+        console.log("Connected to MongoDB");
+    })
+    .catch(err => console.error("MongoDB connection error:", err));
+
+// Endpoint to receive queue data from ESP32 with Pressure Sensor
+app.post("/update_queue", async (req, res) => {
+    const { queue_count } = req.body;
+    if (queue_count !== undefined) {
+        queueCount = queue_count;
+        io.emit("queue_update", queueCount);  // Send update via WebSocket
+        console.log(`Updated queue count: ${queueCount}`);
+
+        // Store in MongoDB (if enabled)
+        if (db) {
+            try {
+                await db.collection("queueCounts").insertOne({ timestamp: new Date(), queue_count });
+            } catch (error) {
+                console.error("Error storing queue count in MongoDB:", error);
+            }
+        }
+
+        res.status(200).send({ message: "Queue updated successfully." });
+    } else {
+        res.status(400).send({ error: "Invalid data format." });
+    }
+});
+
+// WebSocket connection for real-time updates
+io.on("connection", (socket) => {
+    console.log("Client connected");
+    socket.emit("queue_update", queueCount);  // Send latest count on connect
+
+    socket.on("disconnect", () => {
+        console.log("Client disconnected");
+    });
+});
+
+// API to get current queue count
+app.get("/queue_status", (req, res) => {
+    res.json({ queue_count: queueCount });
+});
+
+server.listen(3000, () => {
+    console.log("Server running on port 3000");
+});
