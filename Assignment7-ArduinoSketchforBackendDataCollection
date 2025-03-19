@@ -1,0 +1,63 @@
+#include <WiFi.h>
+#include <HTTPClient.h>
+
+// WiFi credentials
+const char* ssid = "Your_WiFi_SSID";
+const char* password = "Your_WiFi_Password";
+
+// Server API endpoint
+const char* serverUrl = "http://your-server-ip/update_queue"; // Replace with backend URL
+
+// Pressure sensor pin
+const int pressureSensorPin = 34; // GPIO 34 (ADC1_CH6)
+
+// Threshold to determine if pressure is detected
+const int pressureThreshold = 2000; // Adjust based on calibration
+
+void setup() {
+    Serial.begin(115200);
+
+    // Connect to WiFi
+    WiFi.begin(ssid, password);
+    Serial.print("Connecting to WiFi");
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(1000);
+        Serial.print(".");
+    }
+    Serial.println("\nConnected to WiFi!");
+
+    // Initialize pressure sensor pin
+    pinMode(pressureSensorPin, INPUT);
+}
+
+void loop() {
+    // Read the analog value from the pressure sensor
+    int sensorValue = analogRead(pressureSensorPin);
+    Serial.println("Pressure Sensor Value: " + String(sensorValue));
+
+    // Determine if pressure is detected
+    bool isPressureDetected = sensorValue > pressureThreshold;
+
+    // Queue count logic (e.g., 1 if pressure is detected, 0 otherwise)
+    int queueCount = isPressureDetected ? 1 : 0;
+
+    // Send data to the server
+    if (WiFi.status() == WL_CONNECTED) {
+        HTTPClient http;
+        http.begin(serverUrl);
+        http.addHeader("Content-Type", "application/json");
+
+        // JSON payload
+        String payload = "{\"queue_count\": " + String(queueCount) + "}";
+        int httpResponseCode = http.POST(payload);
+
+        if (httpResponseCode > 0) {
+            Serial.println("Data sent: " + payload);
+        } else {
+            Serial.println("Error sending data.");
+        }
+        http.end();
+    }
+
+    delay(5000); // Send data every 5 seconds
+}
