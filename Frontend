@@ -23,6 +23,6 @@ function draw() {
     fill(230);
     rect(100, 100, 200, 50, 10);
     fill(0);
-    text(`People in Queue: ${queueCount}`, width / 2, 125);
+    text(`People in Queue: ${queueCount}`, width / 4, 150);
 
 }
