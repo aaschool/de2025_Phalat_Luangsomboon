@@ -1,11 +1,7 @@
 # Print Center Queue Counter (AI-Based People Counting)
 
 ## Project Overview
-This project provides a real time counter for the Architectural Association Bar, using an Pressure sensor to detect the number of people in the queue. The system consists of:
-- **ESP32 ** to count people in the queue.
-- **A Node.js backend** to process and store queue data.
-- **A p5.js frontend** (widget & UI) to display queue updates to users in real-time.
-
+This project provides a real time counter for the Architectural Association Bar, using an Pressure sensor to detect the number of people in the queue.
 ---
 
 ## Project Structure
