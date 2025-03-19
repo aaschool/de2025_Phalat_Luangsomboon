@@ -1,9 +1,5 @@
 Print Center Queue Counter (AI-Based People Counting)
 
-Project Overview
-This project provides a real time counter for the Architectural Association Bar, using an Pressure sensor to detect the number of people in the queue.
----
-
 Project Structure
 ```
 AA Bar Que
@@ -16,35 +12,35 @@ AA Bar Que
 ---
 
  Required Components
- **Hardware Components**
-  **ESP32 – Microcontroller for handling sensor input and WiFi communication.
+ Hardware Components
+  ESP32 – Microcontroller for handling sensor input and WiFi communication.
 
-  **FSR402 - Detect varying pressure
+  FSR402 - Detect varying pressure
   
-  **Power Source** – ESP32 requires 5V power supply.
+  Power Source** – ESP32 requires 5V power supply.
   
-  **WiFi Network** – Required for ESP32 to send data to the backend.  
+  WiFi Network** – Required for ESP32 to send data to the backend.  
 
-### **Software Requirements**
-  **Arduino IDE** – To flash ESP32 firmware.  
-  **Node.js (Backend Server)** – Processes queue data and serves it to the frontend.  
-  **p5.js (Frontend UI)** – Displays queue count live.  
+Software Requirements**
+  Arduino IDE – To flash ESP32 firmware.  
+  Node.js (Backend Server)** – Processes queue data and serves it to the frontend.  
+  p5.js (Frontend UI)** – Displays queue count live.  
 
 ---
 
-## Required Libraries
+Required Libraries
 
-### **p5.js (Frontend UI)**
+5.js (Frontend UI)
 - [`p5.serialport`](https://github.com/p5-serial/p5.serialport) → Serial communication with Arduino.
 - [`socket.io-client`](https://socket.io/docs/v4/client-api/) → WebSockets for real-time queue updates.
 
-### **Node.js (Backend Server)**
+Node.js (Backend Server)
 - [`express`](https://www.npmjs.com/package/express) → Handles HTTP requests.
 - [`socket.io`](https://www.npmjs.com/package/socket.io) → WebSockets for real-time updates.
 - [`body-parser`](https://www.npmjs.com/package/body-parser) → Parses incoming queue data.
 - [`cors`](https://www.npmjs.com/package/cors) → Allows cross-origin requests from frontend.
 
-### **Arduino (ESP32)**
+Arduino (ESP32)
 - [`WiFi`](https://www.arduino.cc/en/Reference/WiFi) → Connects ESP32 to the internet.
 - [`ArduinoJson`](https://arduinojson.org/) → Formats queue data as JSON.
 
