@@ -1,0 +1,65 @@
+// p5.js Frontend - AA Bar Queue Widget + Main UI with Pressure Sensor
+// Connects to WebSocket for real-time queue updates from ESP32 with Pressure Sensor
+
+let socket;
+let queueCount = 0;
+let soundEnabled = true;
+let vibrationEnabled = true;
+let notificationsEnabled = true;
+
+function setup() {
+    createCanvas(400, 600);
+    socket = io("http://your-server-ip"); // Update with your server IP
+    socket.on("queue_update", (count) => {
+        queueCount = count;
+        if (soundEnabled) playSound();
+        if (vibrationEnabled) navigator.vibrate(200);
+        if (notificationsEnabled) sendNotification();
+    });
+
+    createUI();
+}
+
+function draw() {
+    background(255);
+    textSize(24);
+    textAlign(CENTER, CENTER);
+    text("Print Center Live Queue Counter", width / 2, 50);
+    
+    // Display queue count
+    fill(230);
+    rect(100, 100, 200, 50, 10);
+    fill(0);
+    text(`People in Queue: ${queueCount}`, width / 2, 125);
+}
+
+function createUI() {
+    let soundToggle = createCheckbox("Enable Sound Alerts", true);
+    soundToggle.position(120, 200);
+    soundToggle.changed(() => soundEnabled = soundToggle.checked());
+
+    let vibrationToggle = createCheckbox("Enable Vibration Alerts", true);
+    vibrationToggle.position(120, 250);
+    vibrationToggle.changed(() => vibrationEnabled = vibrationToggle.checked());
+
+    let notificationsToggle = createCheckbox("Enable Notifications", true);
+    notificationsToggle.position(120, 300);
+    notificationsToggle.changed(() => notificationsEnabled = notificationsToggle.checked());
+
+    let addWidgetBtn = createButton("Add Widget to Home Screen");
+    addWidgetBtn.position(110, 350);
+    addWidgetBtn.mousePressed(() => alert("Widget added to home screen!"));
+}
+
+function playSound() {
+    let beep = new Audio("https://www.soundjay.com/button/beep-07.wav");
+    beep.play();
+}
+
+function sendNotification() {
+    if (Notification.permission === "granted") {
+        new Notification("Queue Update", { body: `There are now ${queueCount} people in the queue.` });
+    } else {
+        Notification.requestPermission();
+    }
+}
