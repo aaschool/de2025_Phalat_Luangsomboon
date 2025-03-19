@@ -5,7 +5,7 @@
 const char* ssid = "YOUR_WIFI_SSID";
 const char* password = "YOUR_WIFI_PASSWORD";
 
-// Server to send data (Change this to your server or mobile app API)
+// Server to send data 
 const char* serverUrl = "http://192.168.1.100:3000/update-count"; // Local Server IP
 
 // Pressure Sensor Variables
@@ -26,7 +26,7 @@ void setup() {
 }
 
 void loop() {
-    // Read Pressure Sensor Data (Assuming digital signal output)
+    // Read Pressure Sensor Data 
     int sensorValue = digitalRead(PRESSURE_SENSOR_PIN);
     
     // Logic: If pressure is detected, increment the queue count
