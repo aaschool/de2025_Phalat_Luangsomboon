@@ -1,15 +1,11 @@
 // p5.js Frontend - AA Bar Queue Widget 
-// Connects to WebSocket for real-time queue updates from ESP32 with Pressure Sensor
 
 let socket;
 let queueCount = 0;
-let soundEnabled = true;
-let vibrationEnabled = true;
-let notificationsEnabled = true;
 
 function setup() {
     createCanvas(600, 600);
-    socket = io("http://your-server-ip"); // Update with your server IP
+    socket = io(192.168.1.1); // Update with your server IP
     socket.on("queue_update", (count) => {
         queueCount = count;
         if (soundEnabled) playSound();
