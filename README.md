@@ -2,7 +2,7 @@
 
 ## Project Overview
 This project provides a real time counter for the Architectural Association Bar, using an Pressure sensor to detect the number of people in the queue. The system consists of:
-- **ESP32 with AI-based object detection** to count people in the queue.
+- **ESP32 ** to count people in the queue.
 - **A Node.js backend** to process and store queue data.
 - **A p5.js frontend** (widget & UI) to display queue updates to users in real-time.
 
@@ -10,10 +10,10 @@ This project provides a real time counter for the Architectural Association Bar,
 
 ## Project Structure
 ```
-print-center-queue
+AA Bar Que
    frontend/       # p5.js frontend
    backend/        # Node.js backend
-   arduino/        # Arduino sketch for ESP32 with pressure sensor
+   arduino/        # Arduino sketch for ESP32 with FSR402 pressure sensor
    README.md       # This documentation file
 ```
 
@@ -22,7 +22,8 @@ print-center-queue
 ## Required Components
 ### **Hardware Components**
   **ESP32 – Microcontroller for handling sensor input and WiFi communication.
-  **Power Source** – ESP32-CAM requires 5V power supply.
+  **FSR402 - Detect varying pressure
+  **Power Source** – ESP32 requires 5V power supply.
   **WiFi Network** – Required for ESP32 to send data to the backend.  
 
 ### **Software Requirements**
@@ -44,29 +45,38 @@ print-center-queue
 - [`body-parser`](https://www.npmjs.com/package/body-parser) → Parses incoming queue data.
 - [`cors`](https://www.npmjs.com/package/cors) → Allows cross-origin requests from frontend.
 
-### **Arduino (ESP32-CAM AI People Counting)**
+### **Arduino (ESP32)**
 - [`WiFi`](https://www.arduino.cc/en/Reference/WiFi) → Connects ESP32 to the internet.
-- [`HTTPClient`](https://www.arduino.cc/reference/en/libraries/httpclient/) → Sends queue data to backend.
-- [`esp_camera`](https://github.com/espressif/esp32-camera) → Enables ESP32-CAM to capture images.
 - [`ArduinoJson`](https://arduinojson.org/) → Formats queue data as JSON.
+
+  
+- FSR402-Specific Functions
+Analog Read (analogRead(pin)) → Used to read values from the FSR402 sensor. No external library required.
+
 
 
 ---
 
-## How the System Works
-
-### ESP32 (Arduino Sketch - Pressure Sensor Queue Detection)
-- Captures a frame using the camera.
-- Uses **TensorFlow Lite** to detect the number of people in the queue.
-- Sends the queue count as a **JSON request to the backend** every 5 seconds.
-
-### **Node.js Backend (Server)**
-- Receives **queue count** from ESP32-CAM.
-- Uses **WebSockets** to send live updates to the frontend.
-
-### **p5.js Frontend (Queue Counter UI)**
-- Connects to the backend via **WebSockets**.
-- Displays real-time queue count.
-- Allows toggling **notifications, sound alerts, and vibration**.
+How the System Works (FSR402 Pressure Sensor for Queue Detection)
+1. Pressure Detection (FSR402 Sensor)
+* The FSR402 sensor is placed on the floor where people queue (e.g., under a mat or taped to the surface).
+* When a person steps on the sensor, it changes resistance based on applied pressure.
+* The ESP32 reads the analog voltage from the sensor to determine whether a person is present.
+2. Data Processing (ESP32 Microcontroller)
+* The ESP32 continuously reads the FSR sensor values.
+* If the pressure value exceeds a threshold, the system counts a person as present.
+* If the pressure drops below the threshold, the system decrements the queue count.
+* The ESP32 formats this count into JSON data and prepares it for transmission.
+3. Data Transmission (Wi-Fi & HTTP Request)
+* The ESP32 connects to Wi-Fi and sends the queue count to a backend server via an HTTP request.
+* If Wi-Fi is disconnected, the ESP32 attempts to reconnect automatically.
+4. Backend Processing (Node.js Server)
+* The Node.js backend receives the queue count from the ESP32.
+* It updates the queue count and stores it in a database (MongoDB, optional).
+* It broadcasts the updated count to the frontend using WebSockets.
+5. Real-Time Display (p5.js Frontend)
+* The frontend, built with p5.js, connects to the backend via WebSockets.
+* It displays the live queue count on a user interface.
+* Optional features like sound alerts, vibration, and notifications can be enabled when the queue changes.
 
 ---# de2025_Phalat_Luangsomboon
